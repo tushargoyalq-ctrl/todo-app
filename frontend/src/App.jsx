@@ -6,7 +6,7 @@ function App() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // ✅ GET TODOS
+  // GET TODOS
   const getTodos = () => {
     setLoading(true);
     fetch("https://todo-app-production-353a.up.railway.app/api/todos")
@@ -21,7 +21,25 @@ function App() {
       });
   };
 
-  // ✅ DELETE TODO
+  // ADD TODO
+  const addTodo = () => {
+    if (!text) return;
+
+    fetch("https://todo-app-production-353a.up.railway.app/api/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    })
+      .then(() => {
+        setText("");
+        getTodos();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // DELETE TODO
   const deleteTodo = (id) => {
     fetch(`https://todo-app-production-353a.up.railway.app/api/todos/${id}`, {
       method: "DELETE",
@@ -35,8 +53,17 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div style={{ textAlign: "center" }}>
       <h1>Todo App 🚀</h1>
+
+      {/* INPUT + ADD BUTTON */}
+      <input
+        type="text"
+        placeholder="Enter todo..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button onClick={addTodo}>Add</button>
 
       <h3>Total Todos: {todos.length}</h3>
 

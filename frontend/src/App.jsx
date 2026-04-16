@@ -21,55 +21,35 @@ function App() {
       });
   };
 
-  // ✅ ADD TODO
-  const addTodo = () => {
-    if (!text) return;
-
-    fetch("https://todo-app-production-353a.up.railway.app/api/todos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
+  // ✅ DELETE TODO
+  const deleteTodo = (id) => {
+    fetch(`https://todo-app-production-353a.up.railway.app/api/todos/${id}`, {
+      method: "DELETE",
     })
-      .then((res) => res.json())
-      .then(() => {
-        setText("");
-        getTodos();
-      })
+      .then(() => getTodos())
       .catch((err) => console.log(err));
   };
 
-  // ✅ LOAD ON START
   useEffect(() => {
     getTodos();
   }, []);
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div>
       <h1>Todo App 🚀</h1>
-
-      {/* INPUT + BUTTON */}
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Enter todo..."
-        style={{ padding: "8px", width: "200px" }}
-      />
-      <button onClick={addTodo} style={{ marginLeft: "10px", padding: "8px" }}>
-        Add
-      </button>
 
       <h3>Total Todos: {todos.length}</h3>
 
-      {/* LOADING */}
       {loading ? (
         <p>Loading...</p>
       ) : todos.length === 0 ? (
         <p>No todos found</p>
       ) : (
         todos.map((todo) => (
-          <p key={todo._id}>{todo.text}</p>
+          <div key={todo._id}>
+            <p>{todo.text}</p>
+            <button onClick={() => deleteTodo(todo._id)}>Delete</button>
+          </div>
         ))
       )}
     </div>

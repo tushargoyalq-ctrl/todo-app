@@ -8,7 +8,7 @@ function App() {
 
   const getTodos = () => {
     setLoading(true);
-    fetch("http://localhost:5000/api/todos")
+    fetch("https://todo-app-production-353a.up.railway.app/api/todos")
       .then((res) => res.json())
       .then((data) => {
         setTodos(Array.isArray(data) ? data : []);
@@ -24,62 +24,14 @@ function App() {
     getTodos();
   }, []);
 
-  const addTodo = async () => {
-    if (!text) return;
-
-    await fetch("http://localhost:5000/api/todos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-
-    setText("");
-    getTodos();
-  };
-
-  const deleteTodo = async (id) => {
-    if (!window.confirm("Delete this todo?")) return;
-
-    await fetch(`http://localhost:5000/api/todos/${id}`, {
-      method: "DELETE",
-    });
-
-    getTodos();
-  };
-
   return (
-    <div className="container">
-      <h1>Todo App 🚀</h1>
-
-      <input
-        type="text"
-        placeholder="Enter todo..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") addTodo();
-        }}
-      />
-
-      <button onClick={addTodo}>Add</button>
-
-      <h2>Total Todos: {todos.length}</h2>
+    <div>
+      <h1>Todo App</h1>
 
       {loading ? (
         <p>Loading...</p>
-      ) : todos.length === 0 ? (
-        <p>No todos found</p>
       ) : (
-        todos.map((todo) => (
-          <div key={todo._id} className="todo">
-            <p>
-              {todo.text}
-              <button onClick={() => deleteTodo(todo._id)}>❌</button>
-            </p>
-          </div>
-        ))
+        todos.map((todo) => <p key={todo._id}>{todo.text}</p>)
       )}
     </div>
   );
